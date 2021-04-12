@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hueting</title>
+    <link rel="stylesheet" href="ui/global.css">
+</head>
+<body>
+    <div class="titlebar"></div>
+    <div class="link">
+        <div class="pair">
+            <span>BPM</span>
+            <span id="link-info-bpm"></span>
+        </div>
+        <div class="pair">
+            <span>Beat</span>
+            <span id="link-info-beat"></span>
+        </div>
+        <div class="pair">
+            <span>Phase</span>
+            <span id="link-info-phase"></span>
+        </div>
+        <div class="pair">
+            <span>New Beat</span>
+            <span id="link-info-new-beat"></span>
+        </div>
+        <div class="pair">
+            <span>Start</span>
+            <button name="start" type="button">Run</button>
+        </div>
+        <div class="pair">
+            <span>Hue start</span>
+            <button name="hueStart" type="button">Run</button>
+        </div>
+        <div class="pair">
+            <span>Hue discover</span>
+            <button name="hueDiscover" type="button">Run</button>
+        </div>
+        <div class="pair">
+            <span>Hue register</span>
+            <button name="hueRegister" type="button">Run</button>
+        </div>
+    </div>
+    <div class="color">
+        <div id="preview-rect"></div>
+        <div id="picker"></div>
+        <div class="pair" id="intensity">
+            <span>Intensity</span>
+            <input name="intensity" type="range" min="1" max="50" value="25">
+        </div>
+        <div class="pair" id="brightness">
+            <span>Brightness</span>
+            <input name="brightness" type="range" min="1" max="50" value="25">
+        </div>
+    </div>
+    <script src="./main.js"></script>
+</body>
+</html>
