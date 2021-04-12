@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/ui/overlay.css">
+</head>
+<body>
+    <span id="bpm-counter"></span>
+    <div class="overlay-4-corners">
+        <video data-headbangs="12" data-reset="0.241066" autoplay loop muted src="cat_vibe.webm"></video>
+        <video data-headbangs="12" data-reset="0.241066" autoplay loop muted src="cat_vibe.webm"></video>
+        <video data-headbangs="12" data-reset="0.241066" autoplay loop muted src="cat_vibe.webm"></video>
+        <video data-headbangs="12" data-reset="0.241066" autoplay loop muted src="cat_vibe.webm"></video>
+    </div>
+    <div>
+        <video style="position: fixed;top: 250px;left: 350px;" data-headbangs="2" autoplay loop muted src="blob_party.webm"></video>
+        <video style="position: fixed;top: 132x;left: 853px;" data-headbangs="2" autoplay loop muted src="blob_party.webm"></video>
+        <video style="position: fixed;top: 613px;left: 348px;" data-headbangs="2" autoplay loop muted src="blob_party.webm"></video>
+    </div>
+    <script>
+        const eventClockTick = "ev-clock-tick";
+        const ws = new WebSocket("ws://localhost:3000/beat");
+        const bpmCounter = document.querySelector("#bpm-counter");
+        ws.addEventListener("message", (m => {
+            try {
+                const data = JSON.parse(m.data);
+                if (data.type === "clock") {
+                    window.dispatchEvent(new CustomEvent(eventClockTick, {
+                        bubbles: true,
+                        composed: true,
+                        detail: data.data,
+                    }));
+                }
+            } catch (e) {
+                console.log(m.data);
+            }
+        }));
+        const randomVideo = (src) => {
+            const video = document.createElement("video");
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.src = src;
+            const x = Math.floor((Math.random() * window.outerWidth) - video.videoWidth);
+            const y = Math.floor((Math.random() * window.outerHeight) - video.videoHeight);
+            video.style.position = "fixed";
+            video.style.left = `${x}px`;
+            video.style.top = `${y}px`;
+            document.body.appendChild(video);
+            return video;
+        };
+
+        window.addEventListener(eventClockTick, (ev) => {
+            const videoFields = document.querySelectorAll("video");
+            bpmCounter.textContent = `${ev.detail.bpm} ${ev.detail.phase}`;
+            videoFields.forEach(video => {
+                let headbangs = 1;
+                if ("headbangs" in video.dataset) {
+                    headbangs = parseFloat(video.dataset["headbangs"]);
+                }
+                const lengthOfHeadbang = video.duration / headbangs;
+                const beatDuration = (60 / ev.detail.bpm);
+                video.playbackRate = (lengthOfHeadbang / beatDuration);
+                if (ev.detail.phase === 0) {
+                    let reset = 0;
+                    if ("reset" in video.dataset) {
+                        reset = parseFloat(video.dataset["reset"]);
+                    }
+                    video.currentTime = reset;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

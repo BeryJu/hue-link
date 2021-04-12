@@ -1,0 +1,43 @@
+body {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    width: 1280px;
+    height: 720px;
+    font-family: sans-serif;
+}
+
+.overlay-4-corners {
+    position: relative;
+}
+.overlay-4-corners :nth-child(1) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: scaleY(-1);
+}
+.overlay-4-corners :nth-child(2) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: scaleY(-1) scaleX(-1);
+}
+.overlay-4-corners :nth-child(3) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+.overlay-4-corners :nth-child(4) {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    transform: scaleX(-1);
+}
+
+#bpm-counter {
+    color: white;
+    font-size: 20px;
+    position: relative;
+    top: 250px;
+    left: 250px;
+}

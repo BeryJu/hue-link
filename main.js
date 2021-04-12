@@ -2,6 +2,10 @@ const abletonlink = require('abletonlink');
 const chroma = require("chroma-js");
 const iro = require('@jaames/iro');
 const Phea = require('phea');
+const path = require('path');
+const express = require('express');
+const expressWs = require('express-ws');
+
 const eventClockTick = "ev-clock-tick";
 const eventLightChange = "ev-light-change";
 
@@ -66,7 +70,7 @@ const linkInfoBPM = document.querySelector("#link-info-bpm");
 const linkInfoNB = document.querySelector("#link-info-new-beat");
 window.addEventListener(eventClockTick, (ev) => {
     linkInfoBPM.textContent = parseInt(ev.detail.bpm, 10);
-    linkInfoPhase.textContent = parseInt(ev.detail.phase, 10);
+    linkInfoPhase.textContent = parseInt(ev.detail.phase, 10) + 1;
     linkInfoBeat.textContent = parseInt(ev.detail.beat, 10);
     linkInfoNB.textContent = ev.detail.newBeat;
 });
@@ -127,3 +131,34 @@ document.querySelector("button[name='hueRegister']").addEventListener("click", (
         console.log(cred);
     })
 });
+
+const app = express();
+expressWs(app);
+const port = 3000;
+app.use(express.static("vids"));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/overlay/index.html'));
+});
+app.get('/ui/overlay.css', (req, res) => {
+    res.sendFile(path.join(__dirname + '/ui/overlay.css'));
+});
+app.ws('/beat', function (ws, req) {
+    const cb = (ev) => {
+        ws.send(JSON.stringify({
+            type: "clock",
+            data: ev.detail
+        }));
+    };
+    ws.on("close", () => {
+        console.log("WS Remove");
+        window.removeEventListener(eventClockTick, cb);
+        // window.removeEventListener(eventLightChange, cb);
+    });
+    console.log("WS Add");
+    window.addEventListener(eventClockTick, cb);
+    // window.addEventListener(eventLightChange, cb);
+});
+
+app.listen(port, "127.0.0.1", () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+})
