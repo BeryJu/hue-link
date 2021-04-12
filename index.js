@@ -5,8 +5,8 @@ const path = require('path')
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: 650,
+    height: 600,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       // preload: path.join(__dirname, 'preload.js'),
@@ -19,7 +19,9 @@ function createWindow () {
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({
+    mode: "undocked"
+  });
 }
 
 // This method will be called when Electron has finished

@@ -1,13 +1,13 @@
 const abletonlink = require('abletonlink');
 const chroma = require("chroma-js");
 const iro = require('@jaames/iro');
-const updateEvent = "link-bpm";
 const Phea = require('phea');
+const eventClockTick = "ev-clock-tick";
+const eventLightChange = "ev-light-change";
 
 let intensity = 25;
 let brightness = 25;
-let color = chroma("#4b0082");
-let colorBase = color;
+let colorBase = chroma("#4b0082");
 
 let phrase = 0;
 let prevBeat = 0;
@@ -27,7 +27,7 @@ const callback = (beatF, phaseF, bpmF) => {
         newPhase = true;
         console.log("new phrase");
     }
-    window.dispatchEvent(new CustomEvent(updateEvent, {
+    window.dispatchEvent(new CustomEvent(eventClockTick, {
         bubbles: true,
         composed: true,
         detail: {
@@ -64,7 +64,7 @@ const linkInfoBeat = document.querySelector("#link-info-beat");
 const linkInfoPhase = document.querySelector("#link-info-phase");
 const linkInfoBPM = document.querySelector("#link-info-bpm");
 const linkInfoNB = document.querySelector("#link-info-new-beat");
-window.addEventListener(updateEvent, (ev) => {
+window.addEventListener(eventClockTick, (ev) => {
     linkInfoBPM.textContent = parseInt(ev.detail.bpm, 10);
     linkInfoPhase.textContent = parseInt(ev.detail.phase, 10);
     linkInfoBeat.textContent = parseInt(ev.detail.beat, 10);
@@ -72,8 +72,12 @@ window.addEventListener(updateEvent, (ev) => {
 });
 
 const preview = document.querySelector("#preview-rect");
+window.addEventListener(eventLightChange, (ev) => {
+    preview.style.background = ev.detail.colorHex;
+});
 
-window.addEventListener(updateEvent, (ev) => {
+let color = chroma("#fff");
+window.addEventListener(eventClockTick, (ev) => {
     const phase = parseInt(ev.detail.phase, 10);
     const beat = parseInt(ev.detail.beat, 10);
 
@@ -90,7 +94,14 @@ window.addEventListener(updateEvent, (ev) => {
     } else {
         color = color.darken(0.05);
     }
-    preview.style.background = color;
+    window.dispatchEvent(new CustomEvent(eventLightChange, {
+        bubbles: true,
+        composed: true,
+        detail: {
+            colorRgb: color.rgb(),
+            colorHex: color.hex(),
+        }
+    }));
 });
 
 document.querySelector("button[name='hueStart']").addEventListener("click", async () => {
@@ -99,11 +110,11 @@ document.querySelector("button[name='hueStart']").addEventListener("click", asyn
     };
     let bridge = await Phea.bridge(options);
     bridge.start(13);
-    window.addEventListener(updateEvent, () => {
-        let lightId = [0];         // 0 is the Default Group for setting all lights in group.
-        let transitionTime = 0; // Milliseconds
+    window.addEventListener(eventLightChange, (ev) => {
+        let lightId = [0];
+        let transitionTime = 0;
 
-        bridge.transition(lightId, color.rgb(), transitionTime);
+        bridge.transition(lightId, ev.detail.colorRgb, transitionTime);
     });
 });
 document.querySelector("button[name='hueDiscover']").addEventListener("click", () => {
