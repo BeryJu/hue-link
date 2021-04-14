@@ -75,6 +75,7 @@ export class UI {
             decayTimeSlider.value = state.decayTime.toString();
             colorOffsetMaxSlider.value = state.colorOffsetMax.toString();
             colorOffsetRandSlider.value = state.colorOffsetRand.toString();
+            colorPicker.color.hexString = state.colorBase.hex();
         });
     }
 
