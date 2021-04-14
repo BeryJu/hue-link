@@ -1,5 +1,6 @@
 export const eventClockTick = "ev-clock-tick";
 export const eventColorChange = "ev-color-change";
+export const eventStateChange = "ev-state-change";
 
 export interface ClockTickDetail {
     bpm: number;

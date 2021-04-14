@@ -1,17 +1,17 @@
 import { eventColorChange, ColorChangeDetail } from "./common";
 import { CONFIG } from "./global";
-
-const Phea = require('phea');
+import { bridge } from "Phea";
+import { HueBridge } from "Phea/build/hue-bridge";
 
 export class HueLight {
 
-    bridge!;
+    bridge!: HueBridge;
 
     constructor() {
     }
 
     async init(): Promise<void> {
-        this.bridge = await Phea.bridge(CONFIG.hue.connection);
+        this.bridge = await bridge(CONFIG.hue.connection);
     }
 
     async start(): Promise<void> {

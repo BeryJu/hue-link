@@ -3,7 +3,7 @@ import { state } from "./global";
 import { Twitch } from "./twitch";
 import { MIDI } from "./midi";
 import { Overlay } from "./overlay";
-import "./ui";
+import { UI } from "./ui";
 
 console.log("Starting twitch component...");
 new Twitch();
@@ -14,6 +14,9 @@ console.log("Started MIDI component");
 console.log("Starting Overlay component...");
 new Overlay();
 console.log("Started Overlay component");
+console.log("Starting UI component...");
+new UI();
+console.log("Started UI component");
 
 window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
     const phase = Math.trunc(ev.detail.phase);

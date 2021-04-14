@@ -25,7 +25,6 @@ export class Twitch {
             const col = message.replace("!", "");
             console.log(`setting color to ${col}`);
             state.colorBase = chroma(col);
-            // colorPicker.color.hexString = state.colorBase.hex();
         });
     }
 

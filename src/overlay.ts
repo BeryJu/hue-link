@@ -13,10 +13,10 @@ export class Overlay {
         const port = 3000;
         this.app.use(express.static("vids"));
         this.app.get('/', (req, res) => {
-            res.sendFile(path.join(__dirname + '/overlay/index.html'));
+            res.sendFile('index.html', { root: "./overlay" });
         });
-        this.app.get('/ui/overlay.css', (req, res) => {
-            res.sendFile(path.join(__dirname + '/ui/overlay.css'));
+        this.app.get('/overlay.css', (req, res) => {
+            res.sendFile('overlay.css', { root: "./overlay" });
         });
         (this.app as unknown as expressWs.Router).ws('/beat', function (ws, req) {
             const cb = (ev: CustomEvent) => {

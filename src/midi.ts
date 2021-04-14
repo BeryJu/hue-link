@@ -33,23 +33,18 @@ export class MIDI {
             // byteA is controlNumber and byteB is controlValue
             switch (CONFIG.midi.cc[byteA.toString()]) {
                 case "intensity":
-                    // intensitySlider.value = byteB / 2;
                     state.intensity = byteB / 2;
                     break;
                 case "brightness":
-                    // brightnessSlider.value = byteB / 2;
                     state.brightness = byteB / 2;
                     break;
                 case "decayTime":
-                    // decayTimeSlider.value = byteB / 2;
                     state.decayTime = byteB / 2;
                     break;
                 case "colorOffsetMax":
-                    // colorOffsetMaxSlider.value = byteB * 1.417322835;
                     state.colorOffsetMax = byteB * 1.417322835;
                     break;
                 case "colorOffsetRand":
-                    // colorOffsetRandSlider.value = byteB;
                     state.colorOffsetRand = byteB;
                     break;
                 default:
