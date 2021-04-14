@@ -55,15 +55,16 @@ export class MIDI {
             if (byteB <= 5) {
                 return;
             }
-            switch (CONFIG.midi.notes[byteA.toString()]) {
+            const key = CONFIG.midi.notes[byteA.toString()];
+            switch (key.cmd) {
                 case "randomColor":
                     setRandomColor();
                     break;
                 case "flashCurrent":
                     state.color = state.colorBase;
                     break;
-                case "flashWhite":
-                    state.color = chroma("white");
+                case "flash":
+                    state.color = chroma(key.arg);
                     break;
                 case "clockFollowOn":
                     state.lightFollowClock = true;
