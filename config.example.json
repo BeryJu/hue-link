@@ -1,0 +1,25 @@
+{
+    "hue": {
+        "address": "1.2.3.4",
+        "psk": "",
+        "username": ""
+    },
+    "midi": {
+        "deviceName": "USB Trigger Finger",
+        "cc": {
+            "102": "intensity",
+            "103": "brightness",
+            "104": "decayTime",
+            "106": "colorOffsetMax",
+            "107": "colorOffsetRand"
+        },
+        "notes": {
+            "36": "randomColor",
+            "37": "flashWhite",
+            "41": "flashCurrent",
+            "47": "clockFollowOff",
+            "51": "clockFollowOn",
+            "48": "newPhrase"
+        }
+    }
+}

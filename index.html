@@ -42,19 +42,33 @@
                 <span>Hue register</span>
                 <button name="hueRegister" type="button">Run</button>
             </div>
+            <hr>
+            <div class="pair">
+                <span>Intensity</span>
+                <input name="intensity" type="range" min="1" max="64" value="25">
+            </div>
+            <div class="pair">
+                <span>Brightness</span>
+                <input name="brightness" type="range" min="1" max="64" value="25">
+            </div>
+            <div class="pair">
+                <span>Decay time</span>
+                <input name="decayTime" type="range" min="1" max="64" value="25">
+            </div>
+            <div class="pair">
+                <span>Color offset</span>
+                <input name="colorOffsetRand" type="range" min="0" max="50" value="10">
+            </div>
+            <div class="pair">
+                <span>Color offset (max °)</span>
+                <input name="colorOffsetMax" type="range" min="0" max="180" value="25">
+            </div>
         </div>
         <div class="color">
             <div id="preview-rect"></div>
             <div id="picker"></div>
-            <div class="pair" id="intensity">
-                <span>Intensity</span>
-                <input name="intensity" type="range" min="1" max="50" value="25">
-            </div>
-            <div class="pair" id="brightness">
-                <span>Brightness</span>
-                <input name="brightness" type="range" min="1" max="50" value="25">
-            </div>
         </div>
         <script src="./main.js"></script>
+        <script src="./components/midi.js"></script>
     </body>
 </html>

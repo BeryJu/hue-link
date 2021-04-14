@@ -5,17 +5,27 @@ const Phea = require('phea');
 const path = require('path');
 const express = require('express');
 const expressWs = require('express-ws');
+const fs = require("fs");
+
+const CONFIG = JSON.parse(fs.readFileSync("./config.json"));
+console.log("Loaded config");
 
 const eventClockTick = "ev-clock-tick";
 const eventLightChange = "ev-light-change";
 
+let decayTime = 35;
 let intensity = 25;
-let brightness = 25;
+let brightness = 35;
+let colorOffsetMax = 0;
+let colorOffsetRand = 10;
 let colorBase = chroma("#4b0082");
 
 let phrase = 0;
 let prevBeat = 0;
 let prevPhraseBeat = 0;
+
+let lightFollowClock = true;
+
 const callback = (beatF, phaseF, bpmF) => {
     const beat = parseInt(beatF, 10);
     let newBeat = false;
@@ -63,6 +73,18 @@ const brightnessSlider = document.querySelector("input[name=brightness]");
 brightnessSlider.addEventListener("input", (ev) => {
     brightness = ev.target.value;
 });
+const decayTimeSlider = document.querySelector("input[name=decayTime]");
+decayTimeSlider.addEventListener("input", (ev) => {
+    decayTime = ev.target.value;
+});
+const colorOffsetMaxSlider = document.querySelector("input[name=colorOffsetMax]");
+colorOffsetMaxSlider.addEventListener("input", (ev) => {
+    colorOffsetMax = ev.target.value;
+});
+const colorOffsetRandSlider = document.querySelector("input[name=colorOffsetRand]");
+colorOffsetRandSlider.addEventListener("input", (ev) => {
+    colorOffsetRand = ev.target.value;
+});
 
 const linkInfoBeat = document.querySelector("#link-info-beat");
 const linkInfoPhase = document.querySelector("#link-info-phase");
@@ -81,22 +103,29 @@ window.addEventListener(eventLightChange, (ev) => {
 });
 
 let color = chroma("#fff");
+function setRandomColor() {
+    const hsv = colorBase.hsv();
+    hsv[0] += colorOffsetMax + (Math.random() * colorOffsetRand);
+    colorBase = chroma.hsv(...hsv);
+    colorPicker.color.hexString = colorBase.hex();
+}
 window.addEventListener(eventClockTick, (ev) => {
     const phase = parseInt(ev.detail.phase, 10);
     const beat = parseInt(ev.detail.beat, 10);
 
-    if (ev.detail.newPhase) {
-        const hsv = colorBase.hsv();
-        hsv[0] += 175 + (Math.random() * 10 * -1); // 180 +- 15c
-        colorBase = chroma.hsv(...hsv);
-        colorPicker.color.hexString = colorBase.hex();
-    }
-    if (ev.detail.newBeat) {
-        if (phase % 1 === 0) {
-            color = colorBase.brighten(brightness / 10).saturate(intensity / 10);
+    if (lightFollowClock) {
+        if (ev.detail.newPhase) {
+            setRandomColor();
+        }
+        if (ev.detail.newBeat) {
+            if (phase % 1 === 0) {
+                color = colorBase.brighten(brightness / 10).saturate(intensity / 10);
+            }
+        } else {
+            color = color.darken(decayTime/1000);
         }
     } else {
-        color = color.darken(0.05);
+        color = color.darken(decayTime/1000);
     }
     window.dispatchEvent(new CustomEvent(eventLightChange, {
         bubbles: true,
@@ -109,10 +138,9 @@ window.addEventListener(eventClockTick, (ev) => {
 });
 
 document.querySelector("button[name='hueStart']").addEventListener("click", async () => {
-    let options = {
-        address: "10.120.20.51",
-    };
-    let bridge = await Phea.bridge(options);
+    let bridge = await Phea.bridge(CONFIG.hue);
+    let groups = await bridge.getGroup(0); // 0 will fetch all groups.
+    console.log(groups);
     bridge.start(13);
     window.addEventListener(eventLightChange, (ev) => {
         let lightId = [0];
@@ -127,9 +155,9 @@ document.querySelector("button[name='hueDiscover']").addEventListener("click", (
     });
 });
 document.querySelector("button[name='hueRegister']").addEventListener("click", () => {
-    Phea.register("10.120.20.51").then(cred => {
+    Phea.register(CONFIG.hue.address).then(cred => {
         console.log(cred);
-    })
+    });
 });
 
 const app = express();
