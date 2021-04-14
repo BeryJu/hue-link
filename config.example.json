@@ -1,8 +1,16 @@
 {
     "hue": {
-        "address": "1.2.3.4",
-        "psk": "",
-        "username": ""
+        "connection": {
+            "address": "1.2.3.4",
+            "psk": "",
+            "username": ""
+        },
+        "config": {
+            "group": 13
+        }
+    },
+    "twitch": {
+        "channels": []
     },
     "midi": {
         "deviceName": "USB Trigger Finger",
