@@ -1,10 +1,11 @@
 const path = require('path');
-const express = require('express');
-const expressWs = require('express-ws');
+import * as express from "express";
+import * as expressWs from 'express-ws';
+import { eventClockTick } from "./common";
 
 export class Overlay {
 
-    app;
+    app: express.Application;
 
     constructor() {
         this.app = express();
@@ -17,8 +18,8 @@ export class Overlay {
         this.app.get('/ui/overlay.css', (req, res) => {
             res.sendFile(path.join(__dirname + '/ui/overlay.css'));
         });
-        this.app.ws('/beat', function (ws, req) {
-            const cb = (ev) => {
+        (this.app as unknown as expressWs.Router).ws('/beat', function (ws, req) {
+            const cb = (ev: CustomEvent) => {
                 ws.send(JSON.stringify({
                     type: "clock",
                     data: ev.detail
@@ -26,11 +27,11 @@ export class Overlay {
             };
             ws.on("close", () => {
                 console.log("WS Remove");
-                window.removeEventListener(eventClockTick, cb);
+                window.removeEventListener(eventClockTick, cb as EventListener);
                 // window.removeEventListener(eventColorChange, cb);
             });
             console.log("WS Add");
-            window.addEventListener(eventClockTick, cb);
+            window.addEventListener(eventClockTick, cb as EventListener);
             // window.addEventListener(eventColorChange, cb);
         });
 

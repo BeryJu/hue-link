@@ -2,14 +2,18 @@ import { ClockTickDetail, eventClockTick, eventColorChange } from "./common";
 import { state } from "./global";
 import { Twitch } from "./twitch";
 import { MIDI } from "./midi";
+import { Overlay } from "./overlay";
 import "./ui";
 
 console.log("Starting twitch component...");
 new Twitch();
 console.log("Started twitch component");
-console.log("Starting midi component...");
+console.log("Starting MIDI component...");
 new MIDI();
-console.log("Started midi component");
+console.log("Started MIDI component");
+console.log("Starting Overlay component...");
+new Overlay();
+console.log("Started Overlay component");
 
 window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
     const phase = Math.trunc(ev.detail.phase);
