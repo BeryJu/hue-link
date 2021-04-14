@@ -114,9 +114,9 @@ window.addEventListener(eventClockTick, (ev) => {
     const beat = parseInt(ev.detail.beat, 10);
 
     if (lightFollowClock) {
-        if (ev.detail.newPhase) {
-            setRandomColor();
-        }
+        // if (ev.detail.newPhase) {
+        //     setRandomColor();
+        // }
         if (ev.detail.newBeat) {
             if (phase % 1 === 0) {
                 color = colorBase.brighten(brightness / 10).saturate(intensity / 10);
