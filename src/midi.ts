@@ -1,4 +1,5 @@
 import * as chroma from "chroma-js";
+import { eventUILog } from "./common";
 import { CONFIG, state } from "./global";
 import { setRandomColor } from "./utils";
 
@@ -45,7 +46,7 @@ export class MIDI {
                     state.colorOffsetMax = byteB * 1.417322835;
                     break;
                 case "colorOffsetRand":
-                    state.colorOffsetRand = byteB;
+                    state.colorOffsetRand = byteB / 2;
                     break;
                 default:
                     break;
@@ -82,7 +83,13 @@ export class MIDI {
                     break;
             }
         } else {
-            console.log(bytes);
+            window.dispatchEvent(new CustomEvent(eventUILog, {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    message: `[mid] unknown midi type`
+                }
+            }));
         }
         console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
     }

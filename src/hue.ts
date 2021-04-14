@@ -1,4 +1,4 @@
-import { eventColorChange, ColorChangeDetail } from "./common";
+import { eventColorChange, ColorChangeDetail, eventUILog } from "./common";
 import { CONFIG } from "./global";
 import { bridge } from "Phea";
 import { HueBridge } from "Phea/build/hue-bridge";
@@ -12,6 +12,13 @@ export class HueLight {
 
     async init(): Promise<void> {
         this.bridge = await bridge(CONFIG.hue.connection);
+        window.dispatchEvent(new CustomEvent(eventUILog, {
+            bubbles: true,
+            composed: true,
+            detail: {
+                message: `[hue] connected`
+            }
+        }));
     }
 
     async start(): Promise<void> {

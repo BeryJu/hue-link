@@ -1,7 +1,6 @@
-const path = require('path');
 import * as express from "express";
 import * as expressWs from 'express-ws';
-import { eventClockTick } from "./common";
+import { eventClockTick, eventUILog } from "./common";
 
 export class Overlay {
 
@@ -36,7 +35,13 @@ export class Overlay {
         });
 
         this.app.listen(port, "127.0.0.1", () => {
-            console.log(`Example app listening at http://localhost:${port}`)
+            window.dispatchEvent(new CustomEvent(eventUILog, {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    message: `[overlay] open http://localhost:${port}`
+                }
+            }));
         });
     }
 

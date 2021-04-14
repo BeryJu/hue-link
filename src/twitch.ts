@@ -1,5 +1,6 @@
 import * as chroma from "chroma-js";
 import * as tmi from "tmi.js";
+import { eventUILog } from "./common";
 import { CONFIG, state } from "./global";
 
 export class Twitch {
@@ -16,6 +17,13 @@ export class Twitch {
             channels: CONFIG.twitch.channels
         });
         this.client.connect().catch(console.error);
+        window.dispatchEvent(new CustomEvent(eventUILog, {
+            bubbles: true,
+            composed: true,
+            detail: {
+                message: `[twitch] connected`
+            }
+        }));
         this.client.on('message', (channel, tags, message, self) => {
             if (self) return;
             if (!message.startsWith("!")) return;
@@ -23,7 +31,13 @@ export class Twitch {
             const isBoosted = "msg-id" in tags ? tags["msg-id"] === "highlighted-message" : false;
             if (!(isSubscriber || isBoosted)) return;
             const col = message.replace("!", "");
-            console.log(`setting color to ${col}`);
+            window.dispatchEvent(new CustomEvent(eventUILog, {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    message: `[twitch] setting color to ${col}`
+                }
+            }));
             state.colorBase = chroma(col);
         });
     }

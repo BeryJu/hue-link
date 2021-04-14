@@ -1,20 +1,22 @@
 import * as chroma from "chroma-js";
-import { eventClockTick, ClockTickDetail, eventColorChange, ColorChangeDetail, eventStateChange } from "./common";
+import { eventClockTick, ClockTickDetail, eventColorChange, ColorChangeDetail, eventStateChange, eventUILog, LogDetail } from "./common";
 import { state } from "./global";
 import { AbletonLink } from "./link";
 import { HueLight } from "./hue" ;
 
 const iro = require('@jaames/iro');
 
-const linkStartButton = document.querySelector("button[name='linkStart']")!;
+const linkStartButton = document.querySelector<HTMLButtonElement>("button[name='linkStart']")!;
 linkStartButton.addEventListener("click", () => {
     new AbletonLink().start();
+    linkStartButton.disabled = true;
 });
-const hueStartButton = document.querySelector("button[name='hueStart']")!;
+const hueStartButton = document.querySelector<HTMLButtonElement>("button[name='hueStart']")!;
 hueStartButton.addEventListener("click", async () => {
     const h = new HueLight();
     await h.init();
     await h.start();
+    hueStartButton.disabled = true;
 });
 
 export class UI {
@@ -54,6 +56,12 @@ export class UI {
             linkInfoPhase.textContent = (Math.trunc(ev.detail.phase) + 1).toString();
             linkInfoBeat.textContent = Math.trunc(ev.detail.beat).toString();
             linkInfoNB.textContent = ev.detail.newBeat.toString();
+        }) as EventListener);
+
+        const logs = document.querySelector("textarea")!;
+        window.addEventListener(eventUILog, ((ev: CustomEvent<LogDetail>) => {
+            logs.textContent += ev.detail.message + "\n";
+            logs.scrollTop = logs.scrollHeight;
         }) as EventListener);
 
         const preview = document.querySelector<HTMLDivElement>("#preview-rect")!;
