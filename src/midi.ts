@@ -67,6 +67,9 @@ export class MIDI {
                 case "flash":
                     state.color = chroma(key.arg);
                     break;
+                case "setColor":
+                    state.colorBase = chroma(key.arg);
+                    break;
                 case "clockFollowOn":
                     state.lightFollowClock = true;
                     break;

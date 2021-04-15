@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as expressWs from 'express-ws';
 import { eventClockTick, eventUILog } from "./common";
+import { CONFIG } from "./global";
 
 export class Overlay {
 
@@ -34,12 +35,12 @@ export class Overlay {
             // window.addEventListener(eventColorChange, cb);
         });
 
-        this.app.listen(port, "127.0.0.1", () => {
+        this.app.listen(port, CONFIG.overlay.host, () => {
             window.dispatchEvent(new CustomEvent(eventUILog, {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    message: `[overlay] open http://localhost:${port}`
+                    message: `[overlay] open http://${CONFIG.overlay.host}:${port}`
                 }
             }));
         });

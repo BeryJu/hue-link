@@ -12,6 +12,9 @@
     "twitch": {
         "channels": []
     },
+    "overlay": {
+        "host": "127.0.0.1"
+    },
     "midi": {
         "deviceName": "USB Trigger Finger",
         "cc": {
