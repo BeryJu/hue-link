@@ -33,4 +33,8 @@ export class HueLight {
         }) as EventListener);
     }
 
+    async stop(): Promise<void> {
+        await this.bridge.stop();
+    }
+
 }

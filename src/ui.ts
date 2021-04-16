@@ -5,17 +5,25 @@ import { AbletonLink } from "./link";
 import { HueLight } from "./hue" ;
 
 const iro = require('@jaames/iro');
+let link: AbletonLink | undefined;
+let hue: HueLight | undefined;
 
 const linkStartButton = document.querySelector<HTMLButtonElement>("button[name='linkStart']")!;
 linkStartButton.addEventListener("click", () => {
-    new AbletonLink().start();
+    link = new AbletonLink()
+    link.start();
     linkStartButton.disabled = true;
 });
 const hueStartButton = document.querySelector<HTMLButtonElement>("button[name='hueStart']")!;
 hueStartButton.addEventListener("click", async () => {
-    const h = new HueLight();
-    await h.init();
-    await h.start();
+    hue = new HueLight();
+    await hue.init();
+    await hue.start();
+    hueStartButton.disabled = true;
+});
+const hueStopButton = document.querySelector<HTMLButtonElement>("button[name='hueStop']")!;
+hueStopButton.addEventListener("click", async () => {
+    await hue?.stop();
     hueStartButton.disabled = true;
 });
 
