@@ -1,11 +1,16 @@
 import * as chroma from "chroma-js";
 import { ColorChangeDetail, eventColorChange, eventUILog } from "./common";
 import { CONFIG, state } from "./global";
-import { setRandomColor } from "./utils";
 
 export const midiNoteOff = 8; // 1000
 export const midiNoteOn = 9; // 1001
 export const midiCC = 11; // 1011
+
+export function setRandomColor() {
+    const hsv = state.colorBase.hsv();
+    hsv[0] += state.colorOffsetMax + (Math.random() * state.colorOffsetRand);
+    state.colorBase = chroma.hsv(...hsv);
+}
 
 export class MIDI {
 
@@ -67,7 +72,7 @@ export class MIDI {
                     break;
                 case "flashCurrent":
                     if (key.light) {
-                        state.color[key.light] = state.colorBase;
+                        state.color[key.light] = state.getColor();
                         window.dispatchEvent(new CustomEvent(eventColorChange, {
                             bubbles: true,
                             composed: true,
@@ -78,7 +83,7 @@ export class MIDI {
                         }));
                     } else {
                         state.color.forEach((c, idx) => {
-                            state.color[idx] = state.colorBase;
+                            state.color[idx] = state.getColor();
                         });
                     }
                     break;

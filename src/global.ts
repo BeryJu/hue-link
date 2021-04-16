@@ -77,6 +77,10 @@ export class State {
     prevBeat = 0;
     prevPhraseBeat = 0;
 
+    getColor(): chroma.Color {
+        return state.colorBase.brighten(state.brightness / 10).saturate(state.intensity / 10);
+    }
+
 }
 
 export const state = new State();

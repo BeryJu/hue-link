@@ -28,11 +28,9 @@ export class Overlay {
             ws.on("close", () => {
                 console.log("WS Remove");
                 window.removeEventListener(eventClockTick, cb as EventListener);
-                // window.removeEventListener(eventColorChange, cb);
             });
             console.log("WS Add");
             window.addEventListener(eventClockTick, cb as EventListener);
-            // window.addEventListener(eventColorChange, cb);
         });
 
         this.app.listen(port, CONFIG.overlay.host, () => {

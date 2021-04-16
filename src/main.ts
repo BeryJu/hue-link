@@ -26,7 +26,7 @@ window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
         if (state.lightFollowClock) {
             if (ev.detail.newBeat) {
                 if (phase % 1 === 0) {
-                    state.color[idx] = state.colorBase.brighten(state.brightness / 10).saturate(state.intensity / 10);
+                    state.color[idx] = state.getColor();
                 }
             } else {
                 state.color[idx] = state.color[idx].darken(state.decayTime / 1000);
