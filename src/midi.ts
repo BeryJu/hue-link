@@ -1,5 +1,5 @@
 import * as chroma from "chroma-js";
-import { eventUILog } from "./common";
+import { ColorChangeDetail, eventColorChange, eventUILog } from "./common";
 import { CONFIG, state } from "./global";
 import { setRandomColor } from "./utils";
 
@@ -30,6 +30,7 @@ export class MIDI {
         const channel = bytes[0] & type;
         const byteA = bytes[1];
         const byteB = bytes[2] + 1;
+        console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
         if (type === midiCC) {
             // byteA is controlNumber and byteB is controlValue
             switch (CONFIG.midi.cc[byteA.toString()]) {
@@ -57,18 +58,49 @@ export class MIDI {
                 return;
             }
             const key = CONFIG.midi.notes[byteA.toString()];
+            if (!key) {
+                return;
+            }
             switch (key.cmd) {
                 case "randomColor":
                     setRandomColor();
                     break;
                 case "flashCurrent":
-                    state.color = state.colorBase;
+                    if (key.light) {
+                        state.color[key.light] = state.colorBase;
+                        window.dispatchEvent(new CustomEvent(eventColorChange, {
+                            bubbles: true,
+                            composed: true,
+                            detail: <ColorChangeDetail>{
+                                colors: state.color,
+                                changedId: key.light,
+                            }
+                        }));
+                    } else {
+                        state.color.forEach((c, idx) => {
+                            state.color[idx] = state.colorBase;
+                        });
+                    }
                     break;
                 case "flash":
-                    state.color = chroma(key.arg);
+                    if (key.light) {
+                        state.color[key.light] = chroma(key.color);
+                        window.dispatchEvent(new CustomEvent(eventColorChange, {
+                            bubbles: true,
+                            composed: true,
+                            detail: <ColorChangeDetail>{
+                                colors: state.color,
+                                changedId: key.light,
+                            }
+                        }));
+                    } else {
+                        state.color.forEach((c, idx) => {
+                            state.color[idx] = chroma(key.color);
+                        });
+                    }
                     break;
                 case "setColor":
-                    state.colorBase = chroma(key.arg);
+                    state.colorBase = chroma(key.color);
                     break;
                 case "clockFollowOn":
                     state.lightFollowClock = true;
@@ -94,7 +126,6 @@ export class MIDI {
                 }
             }));
         }
-        console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
     }
 
 }

@@ -9,22 +9,32 @@ let link: AbletonLink | undefined;
 let hue: HueLight | undefined;
 
 const linkStartButton = document.querySelector<HTMLButtonElement>("button[name='linkStart']")!;
+const linkStopButton = document.querySelector<HTMLButtonElement>("button[name='linkStop']")!;
 linkStartButton.addEventListener("click", () => {
     link = new AbletonLink()
     link.start();
     linkStartButton.disabled = true;
+    linkStopButton.disabled = false;
 });
+linkStopButton.addEventListener("click", () => {
+    link?.stop();
+    linkStartButton.disabled = false;
+    linkStopButton.disabled = true;
+});
+
 const hueStartButton = document.querySelector<HTMLButtonElement>("button[name='hueStart']")!;
+const hueStopButton = document.querySelector<HTMLButtonElement>("button[name='hueStop']")!;
 hueStartButton.addEventListener("click", async () => {
     hue = new HueLight();
     await hue.init();
     await hue.start();
     hueStartButton.disabled = true;
+    hueStopButton.disabled = false;
 });
-const hueStopButton = document.querySelector<HTMLButtonElement>("button[name='hueStop']")!;
 hueStopButton.addEventListener("click", async () => {
     await hue?.stop();
-    hueStartButton.disabled = true;
+    hueStartButton.disabled = false;
+    hueStopButton.disabled = true;
 });
 
 export class UI {
@@ -74,7 +84,7 @@ export class UI {
 
         const preview = document.querySelector<HTMLDivElement>("#preview-rect")!;
         window.addEventListener(eventColorChange, ((ev: CustomEvent<ColorChangeDetail>) => {
-            preview.style.background = ev.detail.colorHex;
+            preview.style.background = ev.detail.colors[0].hex();
         }) as EventListener);
 
         window.addEventListener(eventStateChange, () => {

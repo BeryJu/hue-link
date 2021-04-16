@@ -68,7 +68,9 @@ export class State {
         sendUpdateEvent();
     }
 
-    color = chroma("white");
+    color = [
+        chroma("white")
+    ];
     colorBase = chroma("#4b0082");
 
     phrase = 0;

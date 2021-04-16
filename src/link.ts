@@ -69,6 +69,7 @@ export class AbletonLink {
     }
 
     stop(): void {
+        this.link.stopUpdate();
         this.link.stop();
     }
 

@@ -1,7 +1,8 @@
 import { eventColorChange, ColorChangeDetail, eventUILog } from "./common";
-import { CONFIG } from "./global";
+import { CONFIG, state } from "./global";
 import { bridge } from "Phea";
 import { HueBridge } from "Phea/build/hue-bridge";
+import chroma = require("chroma-js");
 
 export class HueLight {
 
@@ -22,14 +23,23 @@ export class HueLight {
     }
 
     async start(): Promise<void> {
-        let groups = await this.bridge.getGroup(0); // 0 will fetch all groups.
+        const groups = await this.bridge.getGroup(0); // 0 will fetch all groups.
         console.log(groups);
+        // Ensure we're tracking the same amount of colors as lights
+        const ourGroup = groups[CONFIG.hue.config.group];
+        ourGroup.lights.forEach((lightId: any, idx: number) => {
+            state.color[idx] = chroma("white");
+        });
         this.bridge.start(CONFIG.hue.config.group);
+        const transitionTime = 0;
         window.addEventListener(eventColorChange, ((ev: CustomEvent<ColorChangeDetail>) => {
-            let lightId = [0];
-            let transitionTime = 0;
-
-            this.bridge.transition(lightId, ev.detail.colorRgb, transitionTime);
+            if (ev.detail.changedId) {
+                this.bridge.transition([ev.detail.changedId], ev.detail.colors[ev.detail.changedId].rgb(), transitionTime);
+            } else {
+                ev.detail.colors.forEach((color, idx) => {
+                    this.bridge.transition([idx], color.rgb(), transitionTime);
+                });
+            }
         }) as EventListener);
     }
 

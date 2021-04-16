@@ -1,3 +1,4 @@
+import * as chroma from "chroma-js";
 export const eventClockTick = "ev-clock-tick";
 export const eventColorChange = "ev-color-change";
 export const eventStateChange = "ev-state-change";
@@ -12,8 +13,8 @@ export interface ClockTickDetail {
 }
 
 export interface ColorChangeDetail {
-    colorRgb: number[];
-    colorHex: string;
+    colors: chroma.Color[];
+    changedId?: number;
 }
 
 export interface LogDetail {

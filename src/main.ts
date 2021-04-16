@@ -1,4 +1,4 @@
-import { ClockTickDetail, eventClockTick, eventColorChange } from "./common";
+import { ClockTickDetail, ColorChangeDetail, eventClockTick, eventColorChange } from "./common";
 import { state } from "./global";
 import { Twitch } from "./twitch";
 import { MIDI } from "./midi";
@@ -22,24 +22,26 @@ window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
     const phase = Math.trunc(ev.detail.phase);
     const beat = Math.trunc(ev.detail.beat);
 
-    if (state.lightFollowClock) {
-        if (ev.detail.newBeat) {
-            if (phase % 1 === 0) {
-                state.color = state.colorBase.brighten(state.brightness / 10).saturate(state.intensity / 10);
+    state.color.forEach((color, idx) => {
+        if (state.lightFollowClock) {
+            if (ev.detail.newBeat) {
+                if (phase % 1 === 0) {
+                    state.color[idx] = state.colorBase.brighten(state.brightness / 10).saturate(state.intensity / 10);
+                }
+            } else {
+                state.color[idx] = state.color[idx].darken(state.decayTime / 1000);
             }
         } else {
-            state.color = state.color.darken(state.decayTime / 1000);
+            state.color[idx] = state.color[idx].darken(state.decayTime / 1000);
         }
-    } else {
-        state.color = state.color.darken(state.decayTime / 1000);
-    }
-    window.dispatchEvent(new CustomEvent(eventColorChange, {
-        bubbles: true,
-        composed: true,
-        detail: {
-            colorRgb: state.color.rgb(),
-            colorHex: state.color.hex(),
-        }
-    }));
+        window.dispatchEvent(new CustomEvent(eventColorChange, {
+            bubbles: true,
+            composed: true,
+            detail: <ColorChangeDetail>{
+                colors: state.color,
+                changedId: idx,
+            }
+        }));
+    });
 }) as EventListener);
 
