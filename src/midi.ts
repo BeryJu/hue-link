@@ -6,7 +6,7 @@ export const midiNoteOff = 8; // 1000
 export const midiNoteOn = 9; // 1001
 export const midiCC = 11; // 1011
 
-export function setRandomColor() {
+export function setRandomColor(): void {
     const hsv = state.colorBase.hsv();
     hsv[0] += state.colorOffsetMax + (Math.random() * state.colorOffsetRand);
     state.colorBase = chroma.hsv(...hsv);

@@ -9,9 +9,6 @@ export class HueLight {
     bridge!: HueBridge;
     lightIndexMap: { [key: number]: number } = {};
 
-    constructor() {
-    }
-
     async init(): Promise<void> {
         this.bridge = await bridge(CONFIG.hue.connection);
         window.dispatchEvent(new CustomEvent(eventUILog, {
@@ -25,8 +22,7 @@ export class HueLight {
         console.log(groups);
         // Ensure we're tracking the same amount of colors as lights
         const ourGroup = groups[CONFIG.hue.config.group];
-        ourGroup.lights.forEach((lightId: any, lightIdx: number) => {
-            // this.lightIndexMap[idx] = lightId;
+        ourGroup.lights.forEach((lightId: string | number, lightIdx: number) => {
             state.color[lightIdx] = chroma("white");
         });
         sendUpdateEvent();

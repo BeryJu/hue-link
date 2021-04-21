@@ -5,7 +5,7 @@ console.log("Loaded config");
 
 export const CONFIG = JSON.parse(readFileSync("./config.json").toString());
 
-export function sendUpdateEvent() {
+export function sendUpdateEvent(): void {
     window.dispatchEvent(new CustomEvent(eventStateChange, {
         bubbles: true,
         composed: true,

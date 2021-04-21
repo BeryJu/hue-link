@@ -2,8 +2,8 @@ import { ClockTickDetail, eventClockTick } from "./common";
 import { state } from "./global";
 const abletonlink = require('abletonlink');
 
-type eventTypes = 'tempo' | 'numPeers' | 'playState'
-type updateCallback = (beat: number, phase: number, bpm: number, playState: boolean) => any
+type eventTypes = 'tempo' | 'numPeers' | 'playState';
+type updateCallback = (beat: number, phase: number, bpm: number, playState: boolean) => void;
 
 declare abstract class AbletonLinkBase {
     // native code
@@ -17,10 +17,10 @@ declare abstract class AbletonLinkBase {
     enablePlayStateSync(): void
     disablePlayStateSync(): void
     update(): void
-    onTempoChanged(cb: Function): void
-    onNumPeersChanged(cb: Function): void
-    onPlayStateChanged(cb: Function): void
-    on(key: eventTypes, cb: Function): void
+    onTempoChanged(cb: updateCallback): void
+    onNumPeersChanged(cb: updateCallback): void
+    onPlayStateChanged(cb: updateCallback): void
+    on(key: eventTypes, cb: updateCallback): void
     off(key: eventTypes): void
     bpm: number;
     // JavaScript

@@ -5,8 +5,8 @@ import { AbletonLink } from "./link";
 import { HueLight } from "./hue" ;
 
 const iro = require('@jaames/iro');
-let link: AbletonLink = new AbletonLink();
-let hue: HueLight = new HueLight();
+const link: AbletonLink = new AbletonLink();
+const hue: HueLight = new HueLight();
 hue.init();
 
 const linkStartButton = document.querySelector<HTMLButtonElement>("button[name='linkStart']")!;

@@ -20,7 +20,6 @@ console.log("Started UI component");
 
 window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
     const phase = Math.trunc(ev.detail.phase);
-    const beat = Math.trunc(ev.detail.beat);
 
     state.color.forEach((color, idx) => {
         if (state.lightFollowClock) {
