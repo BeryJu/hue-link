@@ -5,7 +5,7 @@ console.log("Loaded config");
 
 export const CONFIG = JSON.parse(readFileSync("./config.json").toString());
 
-function sendUpdateEvent() {
+export function sendUpdateEvent() {
     window.dispatchEvent(new CustomEvent(eventStateChange, {
         bubbles: true,
         composed: true,
@@ -69,7 +69,7 @@ export class State {
     }
 
     color = [
-        chroma("white")
+        chroma("white"),
     ];
     colorBase = chroma("#4b0082");
 

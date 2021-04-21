@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "watch": "tsc --outDir dist  src/main.ts --watch"
+    "watch": "tsc -p . --watch"
   },
   "devDependencies": {
     "@types/chroma-js": "^2.1.3",

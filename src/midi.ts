@@ -71,7 +71,7 @@ export class MIDI {
                     setRandomColor();
                     break;
                 case "flashCurrent":
-                    if (key.light) {
+                    if (key.light !== undefined) {
                         state.color[key.light] = state.getColor();
                         window.dispatchEvent(new CustomEvent(eventColorChange, {
                             bubbles: true,
@@ -88,7 +88,7 @@ export class MIDI {
                     }
                     break;
                 case "flash":
-                    if (key.light) {
+                    if (key.light !== undefined) {
                         state.color[key.light] = chroma(key.color);
                         window.dispatchEvent(new CustomEvent(eventColorChange, {
                             bubbles: true,

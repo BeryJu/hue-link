@@ -5,13 +5,13 @@ import { AbletonLink } from "./link";
 import { HueLight } from "./hue" ;
 
 const iro = require('@jaames/iro');
-let link: AbletonLink | undefined;
-let hue: HueLight | undefined;
+let link: AbletonLink = new AbletonLink();
+let hue: HueLight = new HueLight();
+hue.init();
 
 const linkStartButton = document.querySelector<HTMLButtonElement>("button[name='linkStart']")!;
 const linkStopButton = document.querySelector<HTMLButtonElement>("button[name='linkStop']")!;
 linkStartButton.addEventListener("click", () => {
-    link = new AbletonLink()
     link.start();
     linkStartButton.disabled = true;
     linkStopButton.disabled = false;
@@ -25,7 +25,6 @@ linkStopButton.addEventListener("click", () => {
 const hueStartButton = document.querySelector<HTMLButtonElement>("button[name='hueStart']")!;
 const hueStopButton = document.querySelector<HTMLButtonElement>("button[name='hueStop']")!;
 hueStartButton.addEventListener("click", async () => {
-    hue = new HueLight();
     await hue.init();
     await hue.start();
     hueStartButton.disabled = true;
@@ -38,6 +37,8 @@ hueStopButton.addEventListener("click", async () => {
 });
 
 export class UI {
+
+    previewContainer: HTMLElement;
 
     constructor() {
         const colorPicker = new iro.ColorPicker('#picker');
@@ -82,11 +83,6 @@ export class UI {
             logs.scrollTop = logs.scrollHeight;
         }) as EventListener);
 
-        const preview = document.querySelector<HTMLDivElement>("#preview-rect")!;
-        window.addEventListener(eventColorChange, ((ev: CustomEvent<ColorChangeDetail>) => {
-            preview.style.background = ev.detail.colors[0].hex();
-        }) as EventListener);
-
         window.addEventListener(eventStateChange, () => {
             intensitySlider.value = state.intensity.toString();
             brightnessSlider.value = state.brightness.toString();
@@ -94,6 +90,27 @@ export class UI {
             colorOffsetMaxSlider.value = state.colorOffsetMax.toString();
             colorOffsetRandSlider.value = state.colorOffsetRand.toString();
             colorPicker.color.hexString = state.colorBase.hex();
+            this.updatePreview();
+        });
+        this.previewContainer = document.querySelector<HTMLDivElement>(".preview-container")!;
+        this.updatePreview();
+    }
+
+    updatePreview(): void {
+        if (this.previewContainer.childElementCount !== state.color.length) {
+            this.previewContainer.innerHTML = "";
+            this.createPreviewChildren();
+        }
+    }
+
+    createPreviewChildren(): void {
+        state.color.forEach((_, idx) => {
+            const preview = document.createElement("div");
+            preview.classList.add("preview-rect");
+            window.addEventListener(eventColorChange, ((ev: CustomEvent<ColorChangeDetail>) => {
+                preview.style.background = ev.detail.colors[idx].hex();
+            }) as EventListener);
+            this.previewContainer.appendChild(preview);
         });
     }
 

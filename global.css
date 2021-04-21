@@ -44,7 +44,12 @@ div.pair span:nth-child(2) {
     font-style: italic;
 }
 
-div#preview-rect {
+.preview-container {
+    display: flex;
+}
+
+.preview-rect {
+    border: solid white 2px;
     width: 100px;
     height: 100px;
     border-radius: 100%;
