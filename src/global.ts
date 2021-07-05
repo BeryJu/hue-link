@@ -1,6 +1,7 @@
 import * as chroma from "chroma-js";
-import { eventStateChange } from "./common";
+import { eventStateChange, white } from "./common";
 import { readFileSync } from "fs";
+import { LightMode } from "./mode";
 console.log("Loaded config");
 
 export const CONFIG = JSON.parse(readFileSync("./config.json").toString());
@@ -68,8 +69,10 @@ export class State {
         sendUpdateEvent();
     }
 
+    mode?: LightMode;
+
     color = [
-        chroma("white"),
+        white,
     ];
     colorBase = chroma("#4b0082");
 

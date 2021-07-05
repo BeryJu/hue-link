@@ -1,4 +1,4 @@
-import { eventColorChange, ColorChangeDetail, eventUILog } from "./common";
+import { eventColorChange, ColorChangeDetail, eventUILog, white } from "./common";
 import { CONFIG, sendUpdateEvent, state } from "./global";
 import { bridge } from "Phea";
 import { HueBridge } from "Phea/build/hue-bridge";
@@ -23,7 +23,7 @@ export class HueLight {
         // Ensure we're tracking the same amount of colors as lights
         const ourGroup = groups[CONFIG.hue.config.group];
         ourGroup.lights.forEach((lightId: string | number, lightIdx: number) => {
-            state.color[lightIdx] = chroma("white");
+            state.color[lightIdx] = white;
         });
         sendUpdateEvent();
         console.log(`Found ${ourGroup.lights.length} Lights, set colors`, state.color);

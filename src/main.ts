@@ -1,9 +1,10 @@
-import { ClockTickDetail, ColorChangeDetail, eventClockTick, eventColorChange } from "./common";
+import { ClockTickDetail, eventClockTick } from "./common";
 import { state } from "./global";
 import { Twitch } from "./twitch";
 import { MIDI } from "./midi";
 import { Overlay } from "./overlay";
 import { UI } from "./ui";
+import ImpactAll from "./modes/impactAll";
 
 console.log("Starting twitch component...");
 new Twitch();
@@ -18,29 +19,8 @@ console.log("Starting UI component...");
 new UI();
 console.log("Started UI component");
 
+state.mode = new ImpactAll();
+
 window.addEventListener(eventClockTick, ((ev: CustomEvent<ClockTickDetail>) => {
-    const phase = Math.trunc(ev.detail.phase);
-
-    state.color.forEach((color, idx) => {
-        if (state.lightFollowClock) {
-            if (ev.detail.newBeat) {
-                if (phase % 1 === 0) {
-                    state.color[idx] = state.getColor();
-                }
-            } else {
-                state.color[idx] = state.color[idx].darken(state.decayTime / 1000);
-            }
-        } else {
-            state.color[idx] = state.color[idx].darken(state.decayTime / 1000);
-        }
-        window.dispatchEvent(new CustomEvent(eventColorChange, {
-            bubbles: true,
-            composed: true,
-            detail: <ColorChangeDetail>{
-                colors: state.color,
-                changedId: idx,
-            }
-        }));
-    });
+    state.mode?.onTick(ev.detail);
 }) as EventListener);
-

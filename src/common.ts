@@ -4,6 +4,8 @@ export const eventColorChange = "ev-color-change";
 export const eventStateChange = "ev-state-change";
 export const eventUILog = "ev-ui-log";
 
+export const white = chroma("white");
+
 export interface ClockTickDetail {
     bpm: number;
     phase: number;

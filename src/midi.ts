@@ -1,6 +1,9 @@
 import * as chroma from "chroma-js";
 import { ColorChangeDetail, eventColorChange, eventUILog } from "./common";
 import { CONFIG, state } from "./global";
+import { LightMode } from "./mode";
+import Alternate from "./modes/alternate";
+import ImpactAll from "./modes/impactAll";
 
 export const midiNoteOff = 8; // 1000
 export const midiNoteOn = 9; // 1001
@@ -11,6 +14,11 @@ export function setRandomColor(): void {
     hsv[0] += state.colorOffsetMax + (Math.random() * state.colorOffsetRand);
     state.colorBase = chroma.hsv(...hsv);
 }
+
+export const ModeMap: { [key: string]: LightMode } = {
+    "impactAll": new ImpactAll(),
+    "alternate": new Alternate(),
+};
 
 export class MIDI {
 
@@ -35,7 +43,6 @@ export class MIDI {
         const channel = bytes[0] & type;
         const byteA = bytes[1];
         const byteB = bytes[2] + 1;
-        console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
         if (type === midiCC) {
             // byteA is controlNumber and byteB is controlValue
             switch (CONFIG.midi.cc[byteA.toString()]) {
@@ -55,6 +62,7 @@ export class MIDI {
                     state.colorOffsetRand = byteB / 2;
                     break;
                 default:
+                    console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
                     break;
             }
         } else if (type === midiNoteOn) {
@@ -119,7 +127,11 @@ export class MIDI {
                 case "linkStop":
                     state.prevPhraseBeat = state.prevBeat;
                     break;
+                case "setMode":
+                    state.mode = ModeMap[key.mode];
+                    break;
                 default:
+                    console.debug(`MIDI type ${type} on channel ${channel}: ${bytes[1]};${bytes[2]};${bytes[2] / 2}`);
                     break;
             }
         } else {
