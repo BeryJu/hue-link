@@ -10,7 +10,7 @@
     "express": "^4.17.1",
     "express-ws": "^5.0.2",
     "phea": "^1.0.6",
-    "tmi.js": "^1.8.4"
+    "tmi.js": "^1.8.5"
   },
   "scripts": {
     "start": "electron .",
