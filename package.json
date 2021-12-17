@@ -24,7 +24,7 @@
     "@types/webmidi": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
-    "electron": "^16.0.4",
+    "electron": "^16.0.5",
     "electron-packager": "^15.4.0",
     "eslint": "^8.4.1",
     "tslib": "^2.3.1",
