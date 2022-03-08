@@ -23,7 +23,7 @@
     "@types/tmi.js": "^1.8.1",
     "@types/webmidi": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
-    "@typescript-eslint/parser": "^5.13.0",
+    "@typescript-eslint/parser": "^5.14.0",
     "electron": "^17.1.0",
     "electron-packager": "^15.4.0",
     "eslint": "^8.10.0",
